@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro de Jogadores</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>Cadastro de Jogadores</h1>
+    <form id="cadastro-form">
+      <label>Data da Pelada:</label>
+      <input type="date" id="data" required />
+
+      <label>Nome:</label>
+      <input type="text" id="nome" required />
+
+      <label>É goleiro?</label>
+      <select id="goleiro">
+        <option value="false">Não</option>
+        <option value="true">Sim</option>
+      </select>
+
+      <button type="submit">Adicionar Jogador</button>
+    </form>
+
+    <button id="enviar">Enviar Jogadores</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
