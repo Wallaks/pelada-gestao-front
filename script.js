@@ -6,7 +6,7 @@ document.getElementById("cadastro-form").addEventListener("submit", function(e) 
   const goleiro = document.getElementById("goleiro").value === "true";
 
   if (!nome) {
-    alert("Nome n„o pode estar vazio.");
+    alert("Nome n√£o pode estar vazio.");
     return;
   }
 
@@ -24,7 +24,7 @@ function atualizarTabela() {
 
     tr.innerHTML = `
       <td>${jogador.nome}</td>
-      <td>${jogador.goleiro ? "Sim" : "N„o"}</td>
+      <td>${jogador.goleiro ? "Sim" : "N√£o"}</td>
       <td><button class="excluir" onclick="removerJogador(${index})">Excluir</button></td>
     `;
 
@@ -68,6 +68,6 @@ document.getElementById("enviar").addEventListener("click", async () => {
       alert("Erro ao enviar dados:\n" + errorText);
     }
   } catch (err) {
-    alert("Erro na requisiÁ„o: " + err.message);
+    alert("Erro na requisi√ß√£o: " + err.message);
   }
 });
