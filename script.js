@@ -63,6 +63,7 @@ document.getElementById("enviar").addEventListener("click", async () => {
       alert("Sorteio enviado com sucesso!");
       jogadores = [];
       atualizarTabela();
+      carregarSorteiosSalvos();
     } else {
       const errorText = await response.text();
       alert("Erro ao enviar dados:\n" + errorText);
@@ -71,3 +72,31 @@ document.getElementById("enviar").addEventListener("click", async () => {
     alert("Erro na requisição: " + err.message);
   }
 });
+
+async function carregarSorteiosSalvos() {
+  try {
+    const response = await fetch("https://pelada-gestao.onrender.com/api/sorteios");
+    if (!response.ok) throw new Error("Erro ao buscar sorteios");
+
+    const sorteios = await response.json();
+    exibirSorteiosNaTela(sorteios);
+  } catch (err) {
+    console.error("Erro ao carregar sorteios:", err);
+  }
+}
+
+function exibirSorteiosNaTela(sorteios) {
+  const tabela = document.querySelector("#sorteios-salvos tbody");
+  tabela.innerHTML = "";
+
+  sorteios.forEach(sorteio => {
+    const linha = document.createElement("tr");
+    linha.innerHTML = `
+      <td>${new Date(sorteio.data).toLocaleDateString("pt-BR")}</td>
+      <td>${sorteio.jogadores.length}</td>
+    `;
+    tabela.appendChild(linha);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", carregarSorteiosSalvos);
