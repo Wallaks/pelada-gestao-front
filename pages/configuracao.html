@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurar Sorteio</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/toast.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Configurações do Sorteio</h1>
+
+    <div class="form-jogador">
+      <input type="text" id="nomeSorteio" maxlength="20" placeholder="Nome do sorteio">
+      <input type="number" id="qtdPorEquipe" placeholder="Jogadores por equipe" required>
+      <button id="btnCriarSorteio">Criar Sorteio</button>
+    </div>
+
+    <h2>Sorteios em Andamento</h2>
+    <ul id="listaSorteios"></ul>
+
+    <h1></h1>
+    <button id="btnVoltarConfig">Voltar</button>
+
+    <p class="assinatura" id="assinatura"></p>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <div id="loading" class="loading hidden">Carregando...</div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/configuracao.js"></script>
+</body>
+</html>

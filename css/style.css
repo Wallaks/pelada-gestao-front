@@ -1,0 +1,223 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #ffffff;
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 40px;
+  color: #333;
+}
+
+h2 {
+  margin-top: 30px;
+  font-size: 22px;
+  color: #000;
+}
+
+.form-jogador {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+input[type="text"],
+input[type="number"] {
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.goleiro-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  justify-content: center;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+  display: block;
+}
+
+#btnNovoSorteio,
+#btnAdicionar,
+#btnCriarSorteio {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+#btnNovoSorteio:hover,
+#btnAdicionar:hover,
+#btnCriarSorteio:hover {
+  background-color: #218838;
+}
+
+#btnSorteiosAnteriores,
+#btnVoltar,
+#btnVoltarConfig {
+  background-color: #ffffff;
+  color: #28a745;
+  border: 2px solid #28a745;
+}
+
+#btnSorteiosAnteriores:hover,
+#btnVoltar:hover,
+#btnVoltarConfig:hover {
+  background-color: #e6f4ea;
+}
+
+#listaJogadores,
+#listaSorteios {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  text-align: left;
+}
+
+#listaJogadores li,
+#listaSorteios li {
+  background: #f9f9f9;
+  border-radius: 3px;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+#listaJogadores li span.goleiro {
+  color: green;
+  font-weight: bold;
+}
+
+.btn-excluir {
+  background: #dc3545;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: auto;
+  display: inline-block;
+  margin: 0;
+}
+
+.btn-excluir:hover {
+  background: #c82333;
+}
+
+.btn-excluir:disabled {
+  background: #f5c6cb;
+  color: #fff;
+  opacity: 0.6;
+  cursor: not-allowed;
+  border: none;
+}
+
+.btn-sortear {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-sortear:hover {
+  background-color: #0069d9;
+}
+
+.assinatura {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #666;
+}
+
+#resultadoSorteio {
+  margin-top: 20px;
+  text-align: left;
+}
+
+#resultadoSorteio h4 {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+#resultadoSorteio ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#resultadoSorteio ul li {
+  background: #f1f1f1;
+  border-radius: 3px;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+button:disabled {
+  background: #cccccc !important;
+  color: #666666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+#listaSorteiosAnteriores li {
+  background: #f9f9f9;
+  border-radius: 3px;
+  padding: 4px 8px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+#listaSorteiosAnteriores li div:hover {
+  background-color: #e6f4ea;
+  cursor: pointer;
+}

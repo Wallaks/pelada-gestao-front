@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adicionar Jogador</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/toast.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Adicionar Jogador</h1>
+    <h2 id="nomeSorteio" class="subtitulo-sorteio"></h2>
+
+    <div class="form-jogador">
+      <input type="text" id="nome" placeholder="Nome do jogador" required>
+      <label class="goleiro-check">
+        <input type="checkbox" id="goleiro">
+        Sou goleiro
+      </label>
+      <button id="btnAdicionar">Adicionar</button>
+    </div>
+
+    <h2>Jogadores Cadastrados</h2>
+    <ul id="listaJogadores" class="lista-jogadores"></ul>
+
+    <button id="btnSortear" class="btn-sortear">Sortear Times</button>
+
+    <div id="resultadoSorteio" class="resultado-sorteio">
+      <h2>Time Azul</h2>
+      <ul id="timeAzul"></ul>
+
+      <h2>Time Vermelho</h2>
+      <ul id="timeVermelho"></ul>
+
+      <h2>Reservas</h2>
+      <ul id="reservas"></ul>
+      <h1></h1>
+    </div>
+
+    <button id="btnVoltar">Voltar</button>
+
+    <p class="assinatura" id="assinatura"></p>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <div id="loading" class="loading hidden">Carregando...</div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/cadastro.js"></script>
+</body>
+</html>
