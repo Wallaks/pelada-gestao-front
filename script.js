@@ -21,13 +21,11 @@ function atualizarTabela() {
 
   jogadores.forEach((jogador, index) => {
     const tr = document.createElement("tr");
-
     tr.innerHTML = `
       <td>${jogador.nome}</td>
       <td>${jogador.goleiro ? "Sim" : "Não"}</td>
       <td><button class="excluir" onclick="removerJogador(${index})">Excluir</button></td>
     `;
-
     tbody.appendChild(tr);
   });
 }
@@ -73,6 +71,8 @@ document.getElementById("enviar").addEventListener("click", async () => {
   }
 });
 
+document.getElementById("btn-sorteios").addEventListener("click", carregarSorteiosSalvos);
+
 async function carregarSorteiosSalvos() {
   try {
     const response = await fetch("https://pelada-gestao.onrender.com/api/sorteios");
@@ -98,5 +98,3 @@ function exibirSorteiosNaTela(sorteios) {
     tabela.appendChild(linha);
   });
 }
-
-document.addEventListener("DOMContentLoaded", carregarSorteiosSalvos);
