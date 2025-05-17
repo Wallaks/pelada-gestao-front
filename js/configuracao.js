@@ -73,7 +73,7 @@ function exibirSorteios(sorteios) {
     span.style.cursor = "pointer";
     span.textContent = `${sorteio.nome || "Sem nome"} - ${new Date(sorteio.data).toLocaleDateString("pt-BR")}`;
     span.onclick = () => {
-    window.location.href = `pages/cadastro.html?sorteioId=${sorteio.id}`;
+    window.location.href = `cadastro.html?sorteioId=${sorteio.id}`;
    };
 
 
