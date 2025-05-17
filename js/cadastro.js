@@ -33,9 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.getElementById("btnVoltar").addEventListener("click", () => {
-    window.location.href = "index.html";
-  });
+document.getElementById("btnVoltar").addEventListener("click", () => {
+  window.location.href = "../index.html";
+
+});
+
 });
 
 function atualizarAssinatura() {

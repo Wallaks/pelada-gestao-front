@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("assinatura").textContent = `${formatado} - Wallaks Cardoso`;
 
   document.getElementById("btnNovoSorteio").addEventListener("click", () => {
-    window.location.href = "configuracao.html";
+    window.location.href = "pages/configuracao.html";
   });
 
   document.getElementById("btnSorteiosAnteriores").addEventListener("click", () => {
