@@ -1,0 +1,198 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
+body {
+  background-color: #ffffff;
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+/* Container principal */
+.container {
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Títulos */
+h1 {
+  font-size: 28px;
+  margin-bottom: 40px;
+  color: #333;
+}
+
+h2 {
+  margin-top: 30px;
+  font-size: 22px;
+  color: #000;
+}
+
+/* Botões */
+button {
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  width: 100%;
+}
+
+/* Botão primário (verde) */
+#btnNovoSorteio,
+#btnAdicionar,
+#btnCriarSorteio {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+#btnNovoSorteio:hover,
+#btnAdicionar:hover,
+#btnCriarSorteio:hover {
+  background-color: #218838;
+}
+
+#btnSorteiosAnteriores,
+#btnVoltar,
+#btnVoltarConfig {
+  background-color: #ffffff;
+  color: #28a745;
+  border: 2px solid #28a745;
+}
+
+#btnSorteiosAnteriores:hover,
+#btnVoltar:hover,
+#btnVoltarConfig:hover {
+  background-color: #e6f4ea;
+}
+
+
+#btnSorteiosAnteriores:hover,
+#btnVoltar:hover {
+  background-color: #e6f4ea;
+}
+
+/* Assinatura */
+.assinatura {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Formulários */
+.form-jogador {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="number"] {
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Checkbox com label */
+.goleiro-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  justify-content: center;
+}
+
+/* Linha com input e checkbox (se usado em linha) */
+.linha-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Lista de jogadores */
+#listaJogadores {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  text-align: left;
+}
+
+#listaJogadores li {
+  background: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#listaSorteios li {
+  background: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  display: flex; /* NOVO */
+  justify-content: space-between; /* NOVO */
+  align-items: center; /* NOVO */
+}
+
+.btn-excluir {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-excluir:hover {
+  color: red;
+}
+/* Envolve span + botão dentro de um container flex */
+.item-sorteio {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Botão de excluir visualmente mais leve */
+.btn-excluir {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0;
+}
+
+.btn-excluir:hover {
+  color: red;
+}
+
+
+
