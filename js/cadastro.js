@@ -1,6 +1,16 @@
 const apiUrl = "https://pelada-gestao.onrender.com/api/jogadores";
 
+// Recupera o ID do sorteio da URL
+const urlParams = new URLSearchParams(window.location.search);
+const sorteioId = urlParams.get("sorteioId");
+
 document.addEventListener("DOMContentLoaded", () => {
+  if (!sorteioId) {
+    alert("ID do sorteio não informado.");
+    window.location.href = "../index.html";
+    return;
+  }
+
   atualizarAssinatura();
   carregarJogadores();
 
@@ -14,7 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const data = new Date().toISOString().split("T")[0];
-    const payload = { nome, goleiro, data };
+
+    const payload = {
+      nome,
+      goleiro,
+      data,
+      sorteio: { id: parseInt(sorteioId) }
+    };
 
     try {
       const response = await fetch(apiUrl, {
@@ -33,16 +49,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-document.getElementById("btnVoltar").addEventListener("click", () => {
-  window.location.href = "../index.html";
-
-});
-
+  document.getElementById("btnVoltar").addEventListener("click", () => {
+    window.location.href = "../index.html";
+  });
 });
 
 function atualizarAssinatura() {
   const hoje = new Date();
-  const formatado = hoje.toLocaleDateString('pt-BR');
+  const formatado = hoje.toLocaleDateString("pt-BR");
   document.getElementById("assinatura").textContent = `${formatado} - Wallaks Cardoso`;
 }
 
@@ -52,9 +66,10 @@ async function carregarJogadores() {
     if (!response.ok) throw new Error("Erro ao buscar jogadores");
 
     const jogadores = await response.json();
-    exibirJogadores(jogadores);
+    const jogadoresDoSorteio = jogadores.filter(j => j.sorteioId == sorteioId); // aqui estava errado
+    exibirJogadores(jogadoresDoSorteio);
   } catch (err) {
-    console.error(err);
+    console.error("Erro ao carregar jogadores:", err);
   }
 }
 
@@ -62,11 +77,16 @@ function exibirJogadores(jogadores) {
   const ul = document.getElementById("listaJogadores");
   ul.innerHTML = "";
 
+  if (jogadores.length === 0) {
+    ul.innerHTML = "<li>Nenhum jogador cadastrado.</li>";
+    return;
+  }
+
   jogadores.forEach(jogador => {
     const li = document.createElement("li");
     li.innerHTML = `
       ${jogador.nome} - ${jogador.goleiro ? "Goleiro" : "Linha"} - ${new Date(jogador.data).toLocaleDateString("pt-BR")}
-      <button class="btn-excluir" onclick="deletarJogador(${jogador.id})">???</button>
+      <button class="btn-excluir" onclick="deletarJogador(${jogador.id})">🗑️</button>
     `;
     ul.appendChild(li);
   });
