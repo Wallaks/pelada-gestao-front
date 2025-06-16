@@ -67,20 +67,43 @@ function exibirSorteios(sorteios) {
 async function criarSorteio() {
   const nome = document.getElementById("nomeSorteio").value.trim();
   const qtd = parseInt(document.getElementById("qtdPorEquipe").value);
+  const email = document.getElementById("emailNotificacao").value.trim();
   const data = new Date().toISOString().split("T")[0];
 
-  if (!nome || isNaN(qtd) || qtd <= 0) return showToast("Preencha todos os campos corretamente.", true);
-  if (nome.length > 20) return showToast("O nome do sorteio deve ter no máximo 20 caracteres.", true);
+  if (!nome || isNaN(qtd) || qtd <= 0 || !email) {
+    return showToast("Preencha todos os campos corretamente.", true);
+  }
 
-  const payload = { nome, jogadoresPorEquipe: qtd, data };
+  if (nome.length > 20) {
+    return showToast("O nome do sorteio deve ter no máximo 20 caracteres.", true);
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return showToast("Informe um e-mail válido.", true);
+  }
+
+  const payload = {
+    nome,
+    jogadoresPorEquipe: qtd,
+    data,
+    emailNotificacao: email
+  };
 
   showLoading(true);
   try {
-    const res = await fetch(apiUrlSorteios, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    const res = await fetch(apiUrlSorteios, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
     if (!res.ok) throw new Error("Erro ao criar sorteio");
+
     showToast("Sorteio criado com sucesso.");
     document.getElementById("nomeSorteio").value = "";
     document.getElementById("qtdPorEquipe").value = "";
+    document.getElementById("emailNotificacao").value = "";
     carregarSorteios();
   } catch (err) {
     showToast(err.message, true);
