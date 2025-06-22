@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       showLoading(true);
-      const res = await fetch(`${BASE_URL}/pessoas/cadastrar`, {
+      const res = await fetch(`${BASE_URL}/cadastrar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome, senha })
