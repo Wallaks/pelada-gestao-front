@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await res.json();
       localStorage.setItem("token", data.token);
-      window.location.href = "/pages/home.html";
+      window.location.href = "pages/home.html";
     } catch (err) {
       showToast(err.message, true);
     } finally {
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("btnCadastro").addEventListener("click", () => {
-    window.location.href = "/pages/cadastroPessoa.html";
+    window.location.href = "pages/cadastroPessoa.html";
   });
 });
 
