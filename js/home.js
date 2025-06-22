@@ -4,10 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("assinatura").textContent = `${formatado} - Wallaks Cardoso`;
 
   document.getElementById("btnNovoSorteio").addEventListener("click", () => {
-    window.location.href = "pages/configuracao.html";
+    window.location.href = "cadastroSorteio.html";
   });
 
   document.getElementById("btnSorteiosAnteriores").addEventListener("click", () => {
-    window.location.href = "pages/sorteios-anteriores.html";
+    window.location.href = "sorteiosAnteriores.html";
+  });
+
+  document.querySelector(".btn-voltar")?.addEventListener("click", () => {
+    window.location.href = "../index.html";
   });
 });

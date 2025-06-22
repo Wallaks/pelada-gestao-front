@@ -23,24 +23,24 @@ Gestão da pelada - frontend
 ## Estrutura de Pastas
 
 ```
-index.html
+home.html
 css/
   style.css
   toast.css
 js/
-  cadastro.js
-  configuracao.js
+  cadastroJogador.js
+  cadastroSorteio.js
   script.js
-  sorteios-anteriores.js
+  sorteiosAnteriores.js
   utils.js
 pages/
-  cadastro.html
-  configuracao.html
-  sorteios-anteriores.html
+  cadastroJogador.html
+  cadastroSorteio.html
+  sorteiosAnteriores.html
 ```
 
 ## Como rodar
 
 1. Clone o repositório
-2. Abra o arquivo `index.html` em seu navegador
+2. Abra o arquivo `home.html` em seu navegador
 3. Certifique-se de que o backend está rodando em `localhost:8080` ou utilize a versão em produção

@@ -13,7 +13,7 @@ let sorteioJaFeito = urlParams.get("sorteado") === 'true';
 document.addEventListener("DOMContentLoaded", () => {
   if (!sorteioId) {
     showToast("ID do sorteio não informado.", true);
-    window.location.href = "../index.html";
+    window.location.href = "home.html";
     return;
   }
 
@@ -33,7 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   btnAdicionar.addEventListener("click", adicionarJogador);
-  document.getElementById("btnVoltar").addEventListener("click", () => window.location.href = "../index.html");
+  document.querySelector(".btn-voltar")?.addEventListener("click", () => {
+    window.location.href = "home.html";
+  });
   btnSortear.addEventListener("click", sortearTimes);
 });
 
@@ -44,7 +46,9 @@ function atualizarAssinatura() {
 async function carregarJogadores() {
   showLoading(true);
   try {
-    const res = await fetch(apiUrlJogadores);
+    const res = await fetch(apiUrlJogadores, {
+      headers: getAuthHeaders()
+    });
     if (!res.ok) throw new Error("Erro ao buscar jogadores");
     const jogadores = await res.json();
     exibirJogadores(jogadores.filter(j => j.sorteioId == sorteioId));
@@ -90,7 +94,11 @@ async function adicionarJogador() {
 
   showLoading(true);
   try {
-    const res = await fetch(apiUrlJogadores, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    const res = await fetch(apiUrlJogadores, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(payload)
+    });
     if (!res.ok) throw new Error("Erro ao adicionar jogador");
     document.getElementById("nome").value = "";
     document.getElementById("goleiro").checked = false;
@@ -107,7 +115,10 @@ async function deletarJogador(id) {
   if (!confirm("Tem certeza que deseja excluir este jogador?")) return;
   showLoading(true);
   try {
-    const res = await fetch(`${apiUrlJogadores}/${id}`, { method: "DELETE" });
+    const res = await fetch(`${apiUrlJogadores}/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    });
     if (!res.ok) throw new Error("Erro ao excluir jogador");
     showToast("Jogador excluído.");
     carregarJogadores();
@@ -122,7 +133,9 @@ async function sortearTimes() {
   if (sorteioJaFeito) return showToast("Este sorteio já foi realizado.", true);
   showLoading(true);
   try {
-    const res = await fetch(`${apiUrlSorteio}/sortear/${sorteioId}`);
+    const res = await fetch(`${apiUrlSorteio}/sortear/${sorteioId}`, {
+      headers: getAuthHeaders()
+    });
     if (!res.ok) throw new Error("Erro ao sortear times");
     const resultado = await res.json();
 
@@ -157,7 +170,9 @@ function exibirTimes(elementId, jogadores) {
 
 async function preencherSorteioExistente() {
   try {
-    const res = await fetch(`${apiUrlSorteio}/resultado/${sorteioId}`);
+    const res = await fetch(`${apiUrlSorteio}/resultado/${sorteioId}`, {
+      headers: getAuthHeaders()
+    });
     if (!res.ok) throw new Error("Erro ao obter sorteio realizado");
     const resultado = await res.json();
     ["timeAzul", "timeVermelho", "reservas"].forEach(time => exibirTimes(time, resultado[time]));

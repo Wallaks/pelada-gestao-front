@@ -5,12 +5,29 @@ const BASE_URL = (window.location.hostname.includes('localhost') || window.locat
 const apiUrlSorteios = `${BASE_URL}/sorteios`;
 
 document.addEventListener("DOMContentLoaded", () => {
+  verificarAutenticacao();
   atualizarAssinatura();
   carregarSorteios();
 
   document.getElementById("btnCriarSorteio").addEventListener("click", criarSorteio);
-  document.getElementById("btnVoltarConfig").addEventListener("click", () => window.location.href = "../index.html");
+
+  document.querySelector(".btn-voltar")?.addEventListener("click", () => {
+    window.location.href = "home.html";
+  });
 });
+
+function verificarAutenticacao() {
+  const token = localStorage.getItem("token");
+  if (!token) window.location.href = "../index.html";
+}
+
+function getAuthHeaders() {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
+}
 
 function atualizarAssinatura() {
   document.getElementById("assinatura").textContent = `${new Date().toLocaleDateString('pt-BR')} - Wallaks Cardoso`;
@@ -19,8 +36,12 @@ function atualizarAssinatura() {
 async function carregarSorteios() {
   showLoading(true);
   try {
-    const res = await fetch(apiUrlSorteios);
+    const res = await fetch(apiUrlSorteios, {
+      headers: getAuthHeaders()
+    });
+
     if (!res.ok) throw new Error("Erro ao buscar sorteios");
+
     const sorteios = await res.json();
     const sorteiosEmAndamento = sorteios.filter(s => !s.sorteado);
     exibirSorteios(sorteiosEmAndamento);
@@ -38,18 +59,24 @@ function exibirSorteios(sorteios) {
   sorteios.forEach(sorteio => {
     const li = document.createElement("li");
     const content = document.createElement("div");
-    Object.assign(content.style, { display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" });
+    Object.assign(content.style, {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      width: "100%"
+    });
 
     const span = document.createElement("span");
     span.textContent = `${sorteio.nome || "Sem nome"} - ${new Date(sorteio.data).toLocaleDateString("pt-BR")}`;
     span.style.cursor = "pointer";
     span.onclick = () => {
-      window.location.href = `cadastro.html?sorteioId=${sorteio.id}&nome=${encodeURIComponent(sorteio.nome)}&sorteado=${sorteio.sorteado ? 'true' : 'false'}`;
+      window.location.href = `cadastroJogador.html?sorteioId=${sorteio.id}&nome=${encodeURIComponent(sorteio.nome)}&sorteado=${sorteio.sorteado ? 'true' : 'false'}`;
     };
 
     const btn = document.createElement("button");
     btn.textContent = "Excluir";
     btn.classList.add("btn-excluir");
+
     if (sorteio.sorteado) {
       btn.disabled = true;
       btn.style.opacity = "0.6";
@@ -94,7 +121,7 @@ async function criarSorteio() {
   try {
     const res = await fetch(apiUrlSorteios, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getAuthHeaders(),
       body: JSON.stringify(payload)
     });
 
@@ -117,7 +144,10 @@ async function deletarSorteio(id) {
 
   showLoading(true);
   try {
-    const res = await fetch(`${apiUrlSorteios}/${id}`, { method: "DELETE" });
+    const res = await fetch(`${apiUrlSorteios}/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders()
+    });
 
     if (res.status === 409) {
       const errorMessage = await res.text();

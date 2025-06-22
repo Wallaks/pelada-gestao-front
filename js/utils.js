@@ -10,3 +10,11 @@ function showLoading(show) {
   const loading = document.getElementById("loading");
   loading.classList.toggle("hidden", !show);
 }
+
+function getAuthHeaders() {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
+}

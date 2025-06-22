@@ -3,22 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
+  <title>Cadastro de Pessoa</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/toast.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Sorteio Pelada</h1>
+    <h1>Cadastro de Pessoa</h1>
 
     <div class="form-jogador">
       <input type="text" id="nome" placeholder="Nome" required />
       <input type="password" id="senha" placeholder="Senha" required />
-
-      <div class="botoes-login">
-        <button id="btnCadastro" class="btn-cadastrar">Cadastrar</button>
-        <button id="btnLogin">Entrar</button>
-      </div>
+      <button id="btnCadastrarPessoa">Cadastrar</button>
+      <button class="btn-voltar">Voltar</button>
     </div>
 
     <p class="assinatura" id="assinatura"></p>
@@ -28,6 +25,6 @@
   <div id="loading" class="loading hidden">Carregando...</div>
 
   <script src="../js/utils.js"></script>
-  <script src="../js/index.js"></script>
+  <script src="../js/cadastroPessoa.js"></script>
 </body>
 </html>

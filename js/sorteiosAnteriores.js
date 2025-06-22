@@ -8,7 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
   atualizarAssinatura();
   carregarSorteiosAnteriores();
 
-  document.getElementById("btnVoltar").addEventListener("click", () => window.location.href = "../index.html");
+  document.querySelector(".btn-voltar")?.addEventListener("click", () => {
+    window.location.href = "home.html";
+  });
 });
 
 function atualizarAssinatura() {
@@ -18,7 +20,10 @@ function atualizarAssinatura() {
 async function carregarSorteiosAnteriores() {
   showLoading(true);
   try {
-    const res = await fetch(apiUrlSorteios);
+    const res = await fetch(apiUrlSorteios, {
+      headers: getAuthHeaders()
+    });
+
     if (!res.ok) throw new Error("Erro ao buscar sorteios");
 
     const sorteios = await res.json();
@@ -49,7 +54,7 @@ function exibirSorteiosAnteriores(sorteios) {
     span.style.cursor = "pointer";
 
     span.onclick = () => {
-      window.location.href = `cadastro.html?sorteioId=${sorteio.id}&nome=${encodeURIComponent(sorteio.nome)}&sorteado=true`;
+      window.location.href = `cadastroJogador.html?sorteioId=${sorteio.id}&nome=${encodeURIComponent(sorteio.nome)}&sorteado=true`;
     };
 
     li.appendChild(span);
