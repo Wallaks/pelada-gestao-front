@@ -1,6 +1,6 @@
 const BASE_URL = (window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:8081/api'
-  : 'https://pelada-gestao.onrender.com/api';
+  : 'https://spring-jwt-auth-jdli.onrender.com';
 
 document.addEventListener("DOMContentLoaded", () => {
   atualizarAssinatura();
