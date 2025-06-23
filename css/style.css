@@ -257,3 +257,48 @@ button:disabled {
 .botoes-login button {
   width: 100%;
 }
+
+@media (max-width: 480px) {
+  body {
+    padding: 20px;
+    align-items: flex-start;
+  }
+
+  .container {
+    box-shadow: none;
+    border-radius: 0;
+    border: none;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  button, .btn-cadastrar {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"] {
+    font-size: 15px;
+    padding: 8px;
+  }
+
+  .btn-excluir {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+
+  .assinatura {
+    font-size: 12px;
+    text-align: center;
+  }
+}
