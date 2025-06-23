@@ -103,7 +103,7 @@ async function adicionarJogador() {
     document.getElementById("nome").value = "";
     document.getElementById("goleiro").checked = false;
     showToast("Jogador adicionado com sucesso.");
-    carregarJogadores();
+    //carregarJogadores();
   } catch (err) {
     showToast(err.message, true);
   } finally {
