@@ -90,21 +90,9 @@ async function adicionarJogador() {
 
   if (!nome) return showToast("Informe o nome do jogador.", true);
 
-  const payload = {
-    nome,
-    goleiro,
-    data: new Date().toISOString().split("T")[0],
-    sorteioId: parseInt(sorteioId)
-  };
+  const payload = { nome, goleiro, data: new Date().toISOString().split("T")[0], sorteioId: parseInt(sorteioId) };
 
   showLoading(true);
-
-  // Garantia de encerramento do loading após no máximo 2s
-  setTimeout(() => {
-    showLoading(false);
-    console.log("setTimeout garantiu fim do loading");
-  }, 2000);
-
   try {
     const res = await fetch(apiUrlJogadores, {
       method: "POST",
@@ -112,15 +100,13 @@ async function adicionarJogador() {
       body: JSON.stringify(payload)
     });
     if (!res.ok) throw new Error("Erro ao adicionar jogador");
-
     document.getElementById("nome").value = "";
     document.getElementById("goleiro").checked = false;
     showToast("Jogador adicionado com sucesso.");
-    //carregarJogadores(); // mantido comentado por enquanto
+    carregarJogadores();
   } catch (err) {
     showToast(err.message, true);
   } finally {
-    console.log("finally executado");
     showLoading(false);
   }
 }
