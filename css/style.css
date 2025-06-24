@@ -404,3 +404,14 @@ button:disabled {
   background-color: #444;
 }
 
+.dark-mode #btnSorteiosAnteriores {
+  background-color: transparent;
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.dark-mode #btnSorteiosAnteriores:hover {
+  background-color: #1e2e1e;
+}
+
+
