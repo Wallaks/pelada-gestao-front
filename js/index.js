@@ -5,6 +5,20 @@ const BASE_URL = (window.location.hostname.includes('localhost') || window.locat
 document.addEventListener("DOMContentLoaded", () => {
   atualizarAssinatura();
 
+  const html = document.documentElement;
+  const toggle = document.getElementById("darkSwitch");
+  const savedTheme = localStorage.getItem("darkMode") === "true";
+
+  if (savedTheme) html.classList.add("dark-mode");
+
+  toggle.checked = savedTheme;
+
+  toggle.addEventListener("change", () => {
+    const isDark = toggle.checked;
+    html.classList.toggle("dark-mode", isDark);
+    localStorage.setItem("darkMode", isDark);
+  });
+
   document.getElementById("btnLogin").addEventListener("click", async () => {
     const nome = document.getElementById("nome").value.trim();
     const senha = document.getElementById("senha").value.trim();
@@ -40,5 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function atualizarAssinatura() {
-  document.getElementById("assinatura").textContent = `${new Date().toLocaleDateString('pt-BR')} - Wallaks Cardoso`;
+  document.getElementById("assinatura").textContent =
+    `${new Date().toLocaleDateString('pt-BR')} - Wallaks Cardoso`;
 }
