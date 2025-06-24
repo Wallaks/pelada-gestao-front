@@ -23,8 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (!res.ok) {
-        const erroTexto = await res.text();
-        throw new Error(erroTexto || "Erro ao cadastrar");
+        let mensagemErro = "Erro ao cadastrar";
+        try {
+          const json = await res.json();
+          if (json.erro) mensagemErro = json.erro;
+        } catch (_) {
+        }
+        throw new Error(mensagemErro);
       }
 
       showToast("Cadastro realizado com sucesso");
@@ -44,5 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function atualizarAssinatura() {
-  document.getElementById("assinatura").textContent = `${new Date().toLocaleDateString('pt-BR')} - Wallaks Cardoso`;
+  document.getElementById("assinatura").textContent =
+    `${new Date().toLocaleDateString('pt-BR')} - Wallaks Cardoso`;
 }
