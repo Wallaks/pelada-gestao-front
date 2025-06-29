@@ -42,7 +42,7 @@ function exibirSorteiosAnteriores(sorteios) {
   ul.innerHTML = "";
 
   if (sorteios.length === 0) {
-    ul.innerHTML = "<li>Nenhum sorteio fechado.</li>";
+    ul.innerHTML = "<li>Nenhuma lista fechada.</li>";
     return;
   }
 

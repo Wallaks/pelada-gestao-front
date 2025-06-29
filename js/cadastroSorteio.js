@@ -83,6 +83,8 @@ async function criarSorteio() {
     document.getElementById("nomeSorteio").value = "";
     document.getElementById("qtdPorEquipe").value = "";
     document.getElementById("emailNotificacao").value = "";
+
+    window.location.href = "sorteiosEmAndamento.html";
   } catch (err) {
     showToast(err.message, true);
   } finally {

@@ -1,3 +1,4 @@
+
 const BASE_URL = (window.location.hostname.includes('localhost') || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:8080/api'
   : 'https://pelada-gestao.onrender.com/api';
@@ -16,42 +17,56 @@ if (titulo) {
   titulo.style.textAlign = "left";
 }
 
-atualizarAssinatura();
-carregarJogadores();
-verificarPermissaoSorteio();
-
 const btnSortear = document.getElementById("btnSortear");
 const btnAdicionar = document.getElementById("btnAdicionar");
 const btnGoleiro = document.getElementById("btnGoleiro");
 
 let goleiroAtivo = false;
 
-btnGoleiro?.addEventListener("click", () => {
-  goleiroAtivo = !goleiroAtivo;
-  btnGoleiro.classList.toggle("ativo", goleiroAtivo);
+document.addEventListener("DOMContentLoaded", () => {
+  atualizarAssinatura();
+  carregarJogadores();
+  verificarPermissaoSorteio();
+
+  btnGoleiro?.addEventListener("click", () => {
+    goleiroAtivo = !goleiroAtivo;
+    btnGoleiro.classList.toggle("ativo", goleiroAtivo);
+  });
+
+  if (sorteioJaFeito) {
+    bloquearSorteioJaFeito();
+    preencherSorteioExistente();
+  }
+
+  btnAdicionar.addEventListener("click", adicionarJogador);
+  btnSortear.addEventListener("click", sortearTimes);
+
+  document.querySelector(".btn-voltar")?.addEventListener("click", () => {
+    window.location.href = "home.html";
+  });
+
+  document.querySelectorAll(".titulo-expandivel").forEach(titulo => {
+    titulo.addEventListener("click", () => {
+      const targetId = titulo.dataset.target;
+      const lista = document.getElementById(targetId);
+      if (lista) {
+        lista.classList.toggle("hidden");
+        titulo.classList.toggle("aberto");
+      }
+    });
+  });
 });
-
-if (sorteioJaFeito) {
-  desabilitarAcaoJaSorteado(btnSortear);
-  desabilitarAcaoJaSorteado(btnAdicionar);
-  preencherSorteioExistente();
-}
-
-btnAdicionar.addEventListener("click", adicionarJogador);
-document.querySelector(".btn-voltar")?.addEventListener("click", () => window.location.href = "home.html");
-btnSortear.addEventListener("click", sortearTimes);
 
 function atualizarAssinatura() {
   document.getElementById("assinatura").textContent = `${new Date().toLocaleDateString("pt-BR")} - Wallaks Cardoso`;
 }
 
-async function extrairMensagemErro(res) {
-  try {
-    const data = await res.json();
-    return data?.mensagem || "Erro inesperado";
-  } catch {
-    return "Erro inesperado ao processar resposta do servidor";
-  }
+function getAuthHeaders() {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
 }
 
 function obterUsuarioLogado() {
@@ -62,6 +77,15 @@ function obterUsuarioLogado() {
     return payload.sub || payload.user_name;
   } catch {
     return null;
+  }
+}
+
+async function extrairMensagemErro(res) {
+  try {
+    const data = await res.json();
+    return data?.mensagem || "Erro inesperado";
+  } catch {
+    return "Erro inesperado ao processar resposta do servidor";
   }
 }
 
@@ -80,9 +104,9 @@ async function carregarJogadores() {
 }
 
 function exibirJogadores(jogadores) {
-  const usuarioLogado = obterUsuarioLogado();
   const ul = document.getElementById("listaJogadores");
   ul.innerHTML = jogadores.length ? "" : "<li>Nenhum jogador cadastrado.</li>";
+  const usuarioLogado = obterUsuarioLogado();
 
   jogadores.forEach(jogador => {
     const li = document.createElement("li");
@@ -107,19 +131,6 @@ function exibirJogadores(jogadores) {
     li.append(nomeSpan, btnExcluir);
     ul.appendChild(li);
   });
-}
-
-async function verificarPermissaoSorteio() {
-  const usuarioLogado = obterUsuarioLogado();
-  if (!usuarioLogado) return;
-  try {
-    const res = await fetch(`${apiUrlSorteio}/${sorteioId}`, { headers: getAuthHeaders() });
-    if (!res.ok) return;
-    const sorteio = await res.json();
-    if (sorteio.cadastradoPor !== usuarioLogado) desabilitarAcaoSemPermissao(btnSortear);
-  } catch (err) {
-    console.error("Erro ao verificar permissão do sorteio:", err);
-  }
 }
 
 async function adicionarJogador() {
@@ -177,22 +188,33 @@ async function deletarJogador(id) {
 
 async function sortearTimes() {
   if (sorteioJaFeito) return showToast("Este sorteio já foi realizado.", true);
+
   showLoading(true);
   try {
-    const res = await fetch(`${apiUrlSorteio}/sortear/${sorteioId}`, { headers: getAuthHeaders() });
+    const res = await fetch(`${apiUrlSorteio}/sortear/${sorteioId}`, {
+      method: "GET",
+      headers: getAuthHeaders()
+    });
+
     if (!res.ok) throw new Error(await extrairMensagemErro(res));
+
     const resultado = await res.json();
-    ["timeAzul", "timeVermelho", "reservas"].forEach(time => exibirTimes(time, resultado[time]));
-    desabilitarAcaoJaSorteado(btnSortear);
-    desabilitarAcaoJaSorteado(btnAdicionar);
-    desabilitarTodosExcluir();
+
+    ["timeAzul", "timeVermelho", "reservas"].forEach(time =>
+      exibirTimes(time, resultado[time])
+    );
+
+    bloquearSorteioJaFeito();
     sorteioJaFeito = true;
+
+    window.location.href = "sorteiosAnteriores.html";
   } catch (err) {
     showToast(err.message, true);
   } finally {
     showLoading(false);
   }
 }
+
 
 function exibirTimes(elementId, jogadores) {
   const ul = document.getElementById(elementId);
@@ -220,41 +242,31 @@ async function preencherSorteioExistente() {
   }
 }
 
-function desabilitarAcaoJaSorteado(botao) {
+function bloquearSorteioJaFeito() {
+  bloquearBotao(btnSortear, "Já sorteado");
+  bloquearBotao(btnAdicionar, "Já sorteado");
+  document.querySelectorAll(".btn-excluir").forEach(btn => bloquearBotao(btn, "Excluir"));
+}
+
+function bloquearBotao(botao, texto) {
+  if (!botao) return;
   botao.disabled = true;
-  botao.textContent = "Já sorteado";
+  botao.textContent = texto;
   botao.style.opacity = "0.6";
   botao.style.cursor = "not-allowed";
 }
 
-function desabilitarAcaoSemPermissao(botao) {
-  botao.disabled = true;
-  botao.textContent = "Sortear";
-  botao.style.opacity = "0.6";
-  botao.style.cursor = "not-allowed";
-}
+async function verificarPermissaoSorteio() {
+  const usuarioLogado = obterUsuarioLogado();
+  if (!usuarioLogado) return;
 
-function desabilitarTodosExcluir() {
-  document.querySelectorAll(".btn-excluir").forEach(btn => desabilitarAcaoJaSorteado(btn));
-}
+  try {
+    const res = await fetch(`${apiUrlSorteio}/${sorteioId}`, { headers: getAuthHeaders() });
+    if (!res.ok) return;
 
-function getAuthHeaders() {
-  const token = localStorage.getItem("token");
-  return {
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}`
-  };
+    const sorteio = await res.json();
+    if (sorteio.cadastradoPor !== usuarioLogado) bloquearBotao(btnSortear, "Sortear");
+  } catch (err) {
+    console.error("Erro ao verificar permissão do sorteio:", err);
+  }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".titulo-expandivel").forEach(titulo => {
-    titulo.addEventListener("click", () => {
-      const targetId = titulo.dataset.target;
-      const lista = document.getElementById(targetId);
-      if (lista) {
-        lista.classList.toggle("hidden");
-        titulo.classList.toggle("aberto");
-      }
-    });
-  });
-});
