@@ -121,10 +121,10 @@ button:disabled {
 
 .btn-cadastrar {
   background-color: #ffffff;
-  border: 2px solid #007bff;
+  border: 2px solid #28a745;
   border-radius: 8px;
   box-sizing: border-box;
-  color: #007bff;
+  color: #28a745;
   cursor: pointer;
   display: inline-block;
   font-size: 18px;
@@ -136,7 +136,7 @@ button:disabled {
 }
 
 .btn-cadastrar:hover {
-  background-color: #007bff;
+  background-color: #28a745;
   color: #ffffff;
 }
 
@@ -361,13 +361,13 @@ button:disabled {
 
 .dark-mode .btn-cadastrar {
   background-color: transparent;
-  border-color: #66aaff;
-  color: #66aaff;
+  border-color: #28a745;
+  color: #28a745;
 }
 
 .dark-mode .btn-cadastrar:hover {
-  background-color: #66aaff;
-  color: #161515;
+  background-color: #28a745;
+  color: #ffffff;
 }
 
 .dark-mode .assinatura {
@@ -548,7 +548,7 @@ body {
 }
 
 .linha-inputs input[type="text"] {
-  flex: 2;
+  flex: 1;
 }
 
 .linha-inputs .btn-toggle-goleiro {

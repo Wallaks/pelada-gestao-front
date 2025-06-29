@@ -51,7 +51,7 @@ async function criarSorteio() {
   }
 
   if (nome.length > 20) {
-    return showToast("O nome do sorteio deve ter no máximo 20 caracteres.", true);
+    return showToast("O nome da lista deve ter no máximo 20 caracteres.", true);
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
