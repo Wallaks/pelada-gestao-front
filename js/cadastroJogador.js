@@ -10,46 +10,66 @@ const sorteioId = urlParams.get("sorteioId");
 const nomeSorteio = urlParams.get("nome");
 let sorteioJaFeito = urlParams.get("sorteado") === 'true';
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (!sorteioId) {
-    showToast("ID do sorteio não informado.", true);
-    window.location.href = "home.html";
-    return;
-  }
+const titulo = document.getElementById("nomeSorteio");
+if (titulo) {
+  titulo.textContent = `Sorteio: ${decodeURIComponent(nomeSorteio)}`;
+  titulo.style.textAlign = "left";
+}
 
-  const titulo = document.getElementById("nomeSorteio");
-  if (titulo) titulo.textContent = `Sorteio: ${decodeURIComponent(nomeSorteio)}`;
+atualizarAssinatura();
+carregarJogadores();
+verificarPermissaoSorteio();
 
-  atualizarAssinatura();
-  carregarJogadores();
+const btnSortear = document.getElementById("btnSortear");
+const btnAdicionar = document.getElementById("btnAdicionar");
+const btnGoleiro = document.getElementById("btnGoleiro");
 
-  const btnSortear = document.getElementById("btnSortear");
-  const btnAdicionar = document.getElementById("btnAdicionar");
+let goleiroAtivo = false;
 
-  if (sorteioJaFeito) {
-    desabilitarAcao(btnSortear);
-    desabilitarAcao(btnAdicionar);
-    preencherSorteioExistente();
-  }
-
-  btnAdicionar.addEventListener("click", adicionarJogador);
-  document.querySelector(".btn-voltar")?.addEventListener("click", () => {
-    window.location.href = "home.html";
-  });
-  btnSortear.addEventListener("click", sortearTimes);
+btnGoleiro?.addEventListener("click", () => {
+  goleiroAtivo = !goleiroAtivo;
+  btnGoleiro.classList.toggle("ativo", goleiroAtivo);
 });
+
+if (sorteioJaFeito) {
+  desabilitarAcaoJaSorteado(btnSortear);
+  desabilitarAcaoJaSorteado(btnAdicionar);
+  preencherSorteioExistente();
+}
+
+btnAdicionar.addEventListener("click", adicionarJogador);
+document.querySelector(".btn-voltar")?.addEventListener("click", () => window.location.href = "home.html");
+btnSortear.addEventListener("click", sortearTimes);
 
 function atualizarAssinatura() {
   document.getElementById("assinatura").textContent = `${new Date().toLocaleDateString("pt-BR")} - Wallaks Cardoso`;
 }
 
+async function extrairMensagemErro(res) {
+  try {
+    const data = await res.json();
+    return data?.mensagem || "Erro inesperado";
+  } catch {
+    return "Erro inesperado ao processar resposta do servidor";
+  }
+}
+
+function obterUsuarioLogado() {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.sub || payload.user_name;
+  } catch {
+    return null;
+  }
+}
+
 async function carregarJogadores() {
   showLoading(true);
   try {
-    const res = await fetch(apiUrlJogadores, {
-      headers: getAuthHeaders()
-    });
-    if (!res.ok) throw new Error("Erro ao buscar jogadores");
+    const res = await fetch(apiUrlJogadores, { headers: getAuthHeaders() });
+    if (!res.ok) throw new Error(await extrairMensagemErro(res));
     const jogadores = await res.json();
     exibirJogadores(jogadores.filter(j => j.sorteioId == sorteioId));
   } catch (err) {
@@ -60,23 +80,28 @@ async function carregarJogadores() {
 }
 
 function exibirJogadores(jogadores) {
+  const usuarioLogado = obterUsuarioLogado();
   const ul = document.getElementById("listaJogadores");
   ul.innerHTML = jogadores.length ? "" : "<li>Nenhum jogador cadastrado.</li>";
 
   jogadores.forEach(jogador => {
     const li = document.createElement("li");
     const nomeSpan = document.createElement("span");
-    nomeSpan.textContent = `${jogador.nome} - ${jogador.goleiro ? "Goleiro" : "Linha"}`;
-    if (jogador.goleiro) Object.assign(nomeSpan.style, { color: "green", fontWeight: "bold" });
+    nomeSpan.textContent = jogador.nome;
+    if (jogador.goleiro) {
+      nomeSpan.textContent += " - Goleiro";
+      Object.assign(nomeSpan.style, { color: "green", fontWeight: "bold" });
+    }
 
     const btnExcluir = document.createElement("button");
     btnExcluir.textContent = "Excluir";
     btnExcluir.classList.add("btn-excluir");
 
-    if (sorteioJaFeito) {
-      desabilitarAcao(btnExcluir);
-    } else {
+    const podeExcluir = !sorteioJaFeito && jogador.cadastradoPor === usuarioLogado;
+    if (podeExcluir) {
       btnExcluir.onclick = () => deletarJogador(jogador.id);
+    } else {
+      Object.assign(btnExcluir, { disabled: true, style: { opacity: "0.6", cursor: "not-allowed" } });
     }
 
     li.append(nomeSpan, btnExcluir);
@@ -84,13 +109,29 @@ function exibirJogadores(jogadores) {
   });
 }
 
+async function verificarPermissaoSorteio() {
+  const usuarioLogado = obterUsuarioLogado();
+  if (!usuarioLogado) return;
+  try {
+    const res = await fetch(`${apiUrlSorteio}/${sorteioId}`, { headers: getAuthHeaders() });
+    if (!res.ok) return;
+    const sorteio = await res.json();
+    if (sorteio.cadastradoPor !== usuarioLogado) desabilitarAcaoSemPermissao(btnSortear);
+  } catch (err) {
+    console.error("Erro ao verificar permissão do sorteio:", err);
+  }
+}
+
 async function adicionarJogador() {
   const nome = document.getElementById("nome").value.trim();
-  const goleiro = document.getElementById("goleiro").checked;
-
   if (!nome) return showToast("Informe o nome do jogador.", true);
 
-  const payload = { nome, goleiro, data: new Date().toISOString().split("T")[0], sorteioId: parseInt(sorteioId) };
+  const payload = {
+    nome,
+    goleiro: goleiroAtivo,
+    data: new Date().toISOString().split("T")[0],
+    sorteioId: parseInt(sorteioId)
+  };
 
   showLoading(true);
   try {
@@ -99,9 +140,13 @@ async function adicionarJogador() {
       headers: getAuthHeaders(),
       body: JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error("Erro ao adicionar jogador");
+
+    if (!res.ok) throw new Error(await extrairMensagemErro(res));
+
     document.getElementById("nome").value = "";
-    document.getElementById("goleiro").checked = false;
+    goleiroAtivo = false;
+    btnGoleiro.classList.remove("ativo");
+
     showToast("Jogador adicionado com sucesso.");
     carregarJogadores();
   } catch (err) {
@@ -119,7 +164,8 @@ async function deletarJogador(id) {
       method: "DELETE",
       headers: getAuthHeaders()
     });
-    if (!res.ok) throw new Error("Erro ao excluir jogador");
+
+    if (!res.ok) throw new Error(await extrairMensagemErro(res));
     showToast("Jogador excluído.");
     carregarJogadores();
   } catch (err) {
@@ -133,22 +179,13 @@ async function sortearTimes() {
   if (sorteioJaFeito) return showToast("Este sorteio já foi realizado.", true);
   showLoading(true);
   try {
-    const res = await fetch(`${apiUrlSorteio}/sortear/${sorteioId}`, {
-      headers: getAuthHeaders()
-    });
-    if (!res.ok) throw new Error("Erro ao sortear times");
+    const res = await fetch(`${apiUrlSorteio}/sortear/${sorteioId}`, { headers: getAuthHeaders() });
+    if (!res.ok) throw new Error(await extrairMensagemErro(res));
     const resultado = await res.json();
-
     ["timeAzul", "timeVermelho", "reservas"].forEach(time => exibirTimes(time, resultado[time]));
-
-    const btnSortear = document.getElementById("btnSortear");
-    const btnAdicionar = document.getElementById("btnAdicionar");
-
-    desabilitarAcao(btnSortear);
-    desabilitarAcao(btnAdicionar);
-
+    desabilitarAcaoJaSorteado(btnSortear);
+    desabilitarAcaoJaSorteado(btnAdicionar);
     desabilitarTodosExcluir();
-
     sorteioJaFeito = true;
   } catch (err) {
     showToast(err.message, true);
@@ -160,20 +197,22 @@ async function sortearTimes() {
 function exibirTimes(elementId, jogadores) {
   const ul = document.getElementById(elementId);
   ul.innerHTML = jogadores.length ? "" : "<li>Nenhum jogador.</li>";
+
   jogadores.forEach(jogador => {
     const li = document.createElement("li");
-    li.textContent = `${jogador.nome} - ${jogador.goleiro ? "Goleiro" : "Linha"}`;
-    if (jogador.goleiro) Object.assign(li.style, { color: "green", fontWeight: "bold" });
+    li.textContent = jogador.nome;
+    if (jogador.goleiro) {
+      li.textContent += " - Goleiro";
+      Object.assign(li.style, { color: "green", fontWeight: "bold" });
+    }
     ul.appendChild(li);
   });
 }
 
 async function preencherSorteioExistente() {
   try {
-    const res = await fetch(`${apiUrlSorteio}/resultado/${sorteioId}`, {
-      headers: getAuthHeaders()
-    });
-    if (!res.ok) throw new Error("Erro ao obter sorteio realizado");
+    const res = await fetch(`${apiUrlSorteio}/resultado/${sorteioId}`, { headers: getAuthHeaders() });
+    if (!res.ok) throw new Error(await extrairMensagemErro(res));
     const resultado = await res.json();
     ["timeAzul", "timeVermelho", "reservas"].forEach(time => exibirTimes(time, resultado[time]));
   } catch (err) {
@@ -181,15 +220,41 @@ async function preencherSorteioExistente() {
   }
 }
 
-function desabilitarAcao(botao) {
+function desabilitarAcaoJaSorteado(botao) {
   botao.disabled = true;
   botao.textContent = "Já sorteado";
   botao.style.opacity = "0.6";
   botao.style.cursor = "not-allowed";
 }
 
-function desabilitarTodosExcluir() {
-  document.querySelectorAll(".btn-excluir").forEach(btn => {
-    desabilitarAcao(btn);
-  });
+function desabilitarAcaoSemPermissao(botao) {
+  botao.disabled = true;
+  botao.textContent = "Sortear";
+  botao.style.opacity = "0.6";
+  botao.style.cursor = "not-allowed";
 }
+
+function desabilitarTodosExcluir() {
+  document.querySelectorAll(".btn-excluir").forEach(btn => desabilitarAcaoJaSorteado(btn));
+}
+
+function getAuthHeaders() {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".titulo-expandivel").forEach(titulo => {
+    titulo.addEventListener("click", () => {
+      const targetId = titulo.dataset.target;
+      const lista = document.getElementById(targetId);
+      if (lista) {
+        lista.classList.toggle("hidden");
+        titulo.classList.toggle("aberto");
+      }
+    });
+  });
+});

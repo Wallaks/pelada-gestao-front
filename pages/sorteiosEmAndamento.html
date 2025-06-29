@@ -3,21 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Configurar Sorteio</title>
+  <title>Sorteios em Andamento</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/toast.css">
 </head>
 <body>
   <div class="container">
-    <h1>Configurações do Sorteio</h1>
+    <h1>Sorteios em Andamento</h1>
 
-    <div class="form-jogador">
-      <input type="text" id="nomeSorteio" maxlength="20" placeholder="Nome do sorteio">
-      <input type="number" id="qtdPorEquipe" placeholder="Jogadores por equipe" required>
-      <input type="email" id="emailNotificacao" placeholder="Seu e-mail" required>
-      <button id="btnCriarSorteio">Criar Sorteio</button>
-    </div>
+    <ul id="listaSorteios" class="lista-sorteios"></ul>
 
+    <h1></h1>
     <button class="btn-voltar">Voltar</button>
 
     <p class="assinatura" id="assinatura"></p>
@@ -28,6 +24,6 @@
 
   <script src="../js/theme.js"></script>
   <script src="../js/utils.js"></script>
-  <script src="../js/cadastroSorteio.js"></script>
+  <script src="../js/sorteiosEmAndamento.js"></script>
 </body>
 </html>

@@ -1,45 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Adicionar Jogador</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/toast.css">
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/toast.css"/>
 </head>
 <body>
   <div class="container">
     <h1>Adicionar Jogador</h1>
-    <h2 id="nomeSorteio" class="subtitulo-sorteio"></h2>
+
+    <h2 id="nomeSorteio" class="subtitulo-sorteio alinhado-esquerda"></h2>
 
     <div class="form-jogador">
-      <input type="text" id="nome" placeholder="Nome do jogador" required>
-      <label class="goleiro-check">
-        <input type="checkbox" id="goleiro">
-        Sou goleiro
-      </label>
+      <div class="linha-inputs">
+        <input type="text" id="nome" placeholder="Nome do jogador" required />
+        <button type="button" id="btnGoleiro" class="btn-toggle-goleiro" aria-pressed="false">Sou goleiro</button>
+      </div>
       <button id="btnAdicionar">Adicionar</button>
     </div>
 
-    <h2>Jogadores Cadastrados</h2>
-    <ul id="listaJogadores" class="lista-jogadores"></ul>
+    <h2 class="titulo-expandivel" data-target="listaJogadores">
+      Jogadores Cadastrados <span class="icone-seta">></span>
+    </h2>
+    <ul id="listaJogadores" class="lista-expandivel hidden"></ul>
 
     <button id="btnSortear" class="btn-sortear">Sortear Times</button>
 
     <div id="resultadoSorteio" class="resultado-sorteio">
-      <h2>Time Azul</h2>
-      <ul id="timeAzul"></ul>
+      <h2 class="titulo-expandivel" data-target="timeAzul">
+        Time Azul <span class="icone-seta">></span>
+      </h2>
+      <ul id="timeAzul" class="lista-expandivel hidden"></ul>
 
-      <h2>Time Vermelho</h2>
-      <ul id="timeVermelho"></ul>
+      <h2 class="titulo-expandivel" data-target="timeVermelho">
+        Time Vermelho <span class="icone-seta">></span>
+      </h2>
+      <ul id="timeVermelho" class="lista-expandivel hidden"></ul>
 
-      <h2>Reservas</h2>
-      <ul id="reservas"></ul>
-      <h1></h1>
+      <h2 class="titulo-expandivel" data-target="reservas">
+        Reservas <span class="icone-seta">></span>
+      </h2>
+      <ul id="reservas" class="lista-expandivel hidden"></ul>
     </div>
 
     <button class="btn-voltar">Voltar</button>
-
     <p class="assinatura" id="assinatura"></p>
   </div>
 

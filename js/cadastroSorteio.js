@@ -7,10 +7,8 @@ const apiUrlSorteios = `${BASE_URL}/sorteios`;
 document.addEventListener("DOMContentLoaded", () => {
   verificarAutenticacao();
   atualizarAssinatura();
-  carregarSorteios();
 
   document.getElementById("btnCriarSorteio").addEventListener("click", criarSorteio);
-
   document.querySelector(".btn-voltar")?.addEventListener("click", () => {
     window.location.href = "home.html";
   });
@@ -33,62 +31,13 @@ function atualizarAssinatura() {
   document.getElementById("assinatura").textContent = `${new Date().toLocaleDateString('pt-BR')} - Wallaks Cardoso`;
 }
 
-async function carregarSorteios() {
-  showLoading(true);
+async function extrairMensagemErro(res) {
   try {
-    const res = await fetch(apiUrlSorteios, {
-      headers: getAuthHeaders()
-    });
-
-    if (!res.ok) throw new Error("Erro ao buscar sorteios");
-
-    const sorteios = await res.json();
-    const sorteiosEmAndamento = sorteios.filter(s => !s.sorteado);
-    exibirSorteios(sorteiosEmAndamento);
-  } catch (err) {
-    showToast(err.message, true);
-  } finally {
-    showLoading(false);
+    const data = await res.json();
+    return data?.mensagem || "Erro inesperado";
+  } catch {
+    return "Erro inesperado ao processar resposta do servidor";
   }
-}
-
-function exibirSorteios(sorteios) {
-  const ul = document.getElementById("listaSorteios");
-  ul.innerHTML = "";
-
-  sorteios.forEach(sorteio => {
-    const li = document.createElement("li");
-    const content = document.createElement("div");
-    Object.assign(content.style, {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      width: "100%"
-    });
-
-    const span = document.createElement("span");
-    span.textContent = `${sorteio.nome || "Sem nome"} - ${new Date(sorteio.data).toLocaleDateString("pt-BR")}`;
-    span.style.cursor = "pointer";
-    span.onclick = () => {
-      window.location.href = `cadastroJogador.html?sorteioId=${sorteio.id}&nome=${encodeURIComponent(sorteio.nome)}&sorteado=${sorteio.sorteado ? 'true' : 'false'}`;
-    };
-
-    const btn = document.createElement("button");
-    btn.textContent = "Excluir";
-    btn.classList.add("btn-excluir");
-
-    if (sorteio.sorteado) {
-      btn.disabled = true;
-      btn.style.opacity = "0.6";
-      btn.style.cursor = "not-allowed";
-    } else {
-      btn.onclick = () => deletarSorteio(sorteio.id);
-    }
-
-    content.append(span, btn);
-    li.appendChild(content);
-    ul.appendChild(li);
-  });
 }
 
 async function criarSorteio() {
@@ -125,48 +74,18 @@ async function criarSorteio() {
       body: JSON.stringify(payload)
     });
 
-    if (!res.ok) throw new Error("Erro ao criar sorteio");
+    if (!res.ok) {
+      const msg = await extrairMensagemErro(res);
+      throw new Error(msg);
+    }
 
     showToast("Sorteio criado com sucesso.");
     document.getElementById("nomeSorteio").value = "";
     document.getElementById("qtdPorEquipe").value = "";
     document.getElementById("emailNotificacao").value = "";
-    carregarSorteios();
   } catch (err) {
     showToast(err.message, true);
   } finally {
     showLoading(false);
   }
-}
-
-async function deletarSorteio(id) {
-  if (!confirm("Tem certeza que deseja excluir este sorteio?")) return;
-
-  showLoading(true);
-  try {
-    const res = await fetch(`${apiUrlSorteios}/${id}`, {
-      method: "DELETE",
-      headers: getAuthHeaders()
-    });
-
-    if (res.status === 409) {
-      const errorMessage = await res.text();
-      showToast(errorMessage, true);
-      return;
-    }
-
-    if (!res.ok) throw new Error("Erro ao excluir sorteio");
-
-    showToast("Sorteio excluído.");
-    carregarSorteios();
-  } catch (err) {
-    showToast(err.message, true);
-  } finally {
-    showLoading(false);
-  }
-}
-
-function getLocalDateISO() {
-  const tzOffset = new Date().getTimezoneOffset() * 60000;
-  return new Date(Date.now() - tzOffset).toISOString().slice(0, 10);
 }

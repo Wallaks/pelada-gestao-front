@@ -7,6 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "cadastroSorteio.html";
   });
 
+  document.getElementById("btnSorteiosEmAndamento").addEventListener("click", () => {
+    window.location.href = "sorteiosEmAndamento.html";
+  });
+
   document.getElementById("btnSorteiosAnteriores").addEventListener("click", () => {
     window.location.href = "sorteiosAnteriores.html";
   });
@@ -15,3 +19,4 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "../index.html";
   });
 });
+
