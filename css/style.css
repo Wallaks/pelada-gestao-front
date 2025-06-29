@@ -276,7 +276,6 @@ button:disabled {
 
   .container {
     box-shadow: none;
-    border-radius: 0;
     border: none;
     padding: 20px;
   }
