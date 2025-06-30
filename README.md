@@ -9,7 +9,7 @@ Frontend do sistema de gestão de pelada.
 - Cadastro de jogadores (com opção de goleiro)
 - Sorteio automático de equipes e reservas
 - Exclusão de jogadores e sorteios
-- Visualização de sorteios anteriores
+- Visualização de Listas fechadas
 - Interface simples e responsiva
 - Feedback visual com toast e loading
 

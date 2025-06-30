@@ -13,7 +13,7 @@ let sorteioJaFeito = urlParams.get("sorteado") === 'true';
 
 const titulo = document.getElementById("nomeSorteio");
 if (titulo) {
-  titulo.textContent = `Sorteio: ${decodeURIComponent(nomeSorteio)}`;
+  titulo.textContent = `Lista: ${decodeURIComponent(nomeSorteio)}`;
   titulo.style.textAlign = "left";
 }
 
